@@ -23,11 +23,12 @@ router.get('/api/huespedes/onebyid/:id', huespedes.getHuespedById);
 router.put('/api/huespedes/update/:id', huespedes.updateById);
 router.delete('/api/huespedes/delete/:id', huespedes.deleteById);
 
-router.post('/api/juegos/create', juegos.create);
-router.get('/api/juegos/all', juegos.retrieveAllJuegos);
-router.get('/api/juegos/onebyid/:id', juegos.getJuegoById);
-router.put('/api/juegos/update/:id', juegos.updateById);
-router.delete('/api/juegos/delete/:id', juegos.deleteById);
+router.post('/api/juegos/create', juego.create);
+router.get('/api/juegos/all', juego.retrieveAllJuegos);
+router.get('/api/juegos/onebyid/:id', juego.getJuegoById);
+router.put('/api/juegos/update/:id', juego.updateById);
+router.delete('/api/juegos/delete/:id', juego.deleteById);
+
 
 
 
