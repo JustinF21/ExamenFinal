@@ -1,21 +1,24 @@
 const db = require('../config/db.config.js');
-const Huesped = db.Huesped;
+const Juego = db.Juego;
 
+// Create a new game entry
 exports.create = (req, res) => {
-    let huesped = {};
+    let juego = {};
 
     try {
-        huesped.nombre = req.body.nombre;
-        huesped.apellido = req.body.apellido;
-        huesped.documento_identidad = req.body.documento_identidad;
-        huesped.telefono = req.body.telefono;
-        huesped.correo_electronico = req.body.correo_electronico;
-        huesped.habitacion = req.body.habitacion;
+        juego.nombre_juego = req.body.nombre_juego;
+        juego.genero = req.body.genero;
+        juego.plataforma = req.body.plataforma;
+        juego.fecha_lanzamiento = req.body.fecha_lanzamiento;
+        juego.precio_alquiler = req.body.precio_alquiler;
+        juego.fecha_devolucion = req.body.fecha_devolucion; // Remove special character
+        juego.nombre_cliente = req.body.nombre_cliente;
+        juego.comentario = req.body.comentario;
 
-        Huesped.create(huesped).then(result => {    
+        Juego.create(juego).then(result => {    
             res.status(200).json({
-                message: "Upload Successfully a Huesped with id = " + result.id_huesped,
-                huesped: result,
+                message: "Upload Successfully a Juego with id = " + result.id_juego,
+                juego: result,
             });
         });
     } catch (error) {
@@ -26,12 +29,13 @@ exports.create = (req, res) => {
     }
 }
 
-exports.retrieveAllHuespedes = (req, res) => {
-    Huesped.findAll()
-        .then(huespedes => {
+// Retrieve all games
+exports.retrieveAllJuegos = (req, res) => {
+    Juego.findAll()
+        .then(juegos => {
             res.status(200).json({
-                message: "Get all Huespedes' Infos Successfully!",
-                huespedes: huespedes
+                message: "Get all Juegos' Infos Successfully!",
+                juegos: juegos
             });
         })
         .catch(error => {
@@ -43,13 +47,14 @@ exports.retrieveAllHuespedes = (req, res) => {
         });
 }
 
-exports.getHuespedById = (req, res) => {
-    let huespedId = req.params.id;
-    Huesped.findByPk(huespedId)
-        .then(huesped => {
+// Get a game by id
+exports.getJuegoById = (req, res) => {
+    let juegoId = req.params.id;
+    Juego.findByPk(juegoId)
+        .then(juego => {
             res.status(200).json({
-                message: "Successfully Get a Huesped with id = " + huespedId,
-                huesped: huesped
+                message: "Successfully Get a Juego with id = " + juegoId,
+                juego: juego
             });
         })
         .catch(error => {
@@ -61,17 +66,18 @@ exports.getHuespedById = (req, res) => {
         });
 }
 
-exports.filteringByDocumentoIdentidad = (req, res) => {
-    let documento_identidad = req.query.documento_identidad;
+// Filter games by genre
+exports.filteringByGenre = (req, res) => {
+    let genre = req.query.genero;
 
-    Huesped.findAll({
-        attributes: ['id_huesped', 'nombre', 'apellido', 'documento_identidad', 'telefono', 'correo_electronico', 'habitacion'],
-        where: { documento_identidad: documento_identidad }
+    Juego.findAll({
+        attributes: ['id_juego', 'nombre_juego', 'genero', 'plataforma', 'fecha_lanzamiento', 'precio_alquiler', 'comentario'],
+        where: { genero: genre }
     })
     .then(results => {
         res.status(200).json({
-            message: "Get all Huespedes with documento_identidad = " + documento_identidad,
-            huespedes: results,
+            message: "Get all Juegos with genre = " + genre,
+            juegos: results,
         });
     })
     .catch(error => {
@@ -83,98 +89,102 @@ exports.filteringByDocumentoIdentidad = (req, res) => {
     });
 }
 
+// Pagination for games
 exports.pagination = (req, res) => {
     try {
         let page = parseInt(req.query.page);
         let limit = parseInt(req.query.limit);
         const offset = page ? page * limit : 0;
 
-        Huesped.findAndCountAll({ limit: limit, offset: offset })
+        Juego.findAndCountAll({ limit: limit, offset: offset })
             .then(data => {
                 const totalPages = Math.ceil(data.count / limit);
                 const response = {
-                    message: "Paginating is completed! Query parameters: page = " + page + ", limit = " + limit,
+                    message: "Pagination completed! Query parameters: page = " + page + ", limit = " + limit,
                     data: {
                         totalItems: data.count,
                         totalPages: totalPages,
                         limit: limit,
                         currentPageNumber: page + 1,
                         currentPageSize: data.rows.length,
-                        huespedes: data.rows
+                        juegos: data.rows
                     }
                 };
                 res.send(response);
-            });
+            });  
     } catch (error) {
         res.status(500).send({
-            message: "Error -> Can NOT complete a paging request!",
+            message: "Error -> Cannot complete paging request!",
             error: error.message,
         });
     }    
 }
 
+// Update a game by id
 exports.updateById = async (req, res) => {
     try {
-        let huespedId = req.params.id;
-        let huesped = await Huesped.findByPk(huespedId);
+        let juegoId = req.params.id;
+        let juego = await Juego.findByPk(juegoId);
 
-        if (!huesped) {
+        if (!juego) {
             res.status(404).json({
-                message: "Not Found for updating a Huesped with id = " + huespedId,
-                huesped: "",
+                message: "Not Found for updating a Juego with id = " + juegoId,
                 error: "404"
             });
         } else {
             let updatedObject = {
-                nombre: req.body.nombre,
-                apellido: req.body.apellido,
-                documento_identidad: req.body.documento_identidad,
-                telefono: req.body.telefono,
-                correo_electronico: req.body.correo_electronico,
-                habitacion: req.body.habitacion
+                nombre_juego: req.body.nombre_juego,
+                genero: req.body.genero,
+                plataforma: req.body.plataforma,
+                fecha_lanzamiento: req.body.fecha_lanzamiento,
+                precio_alquiler: req.body.precio_alquiler,
+                fecha_devolucion: req.body.fecha_devolucion, // Adjust field name
+                nombre_cliente: req.body.nombre_cliente,
+                comentario: req.body.comentario
             };
-            let result = await Huesped.update(updatedObject, { returning: true, where: { id_huesped: huespedId } });
+            let result = await Juego.update(updatedObject, { returning: true, where: { id_juego: juegoId } });
 
             if (!result) {
                 res.status(500).json({
-                    message: "Error -> Can not update a Huesped with id = " + req.params.id,
-                    error: "Can NOT Updated",
+                    message: "Error -> Cannot update a Juego with id = " + req.params.id,
+                    error: "Cannot be updated",
                 });
             }
 
             res.status(200).json({
-                message: "Update successfully a Huesped with id = " + huespedId,
-                huesped: updatedObject,
+                message: "Update successfully a Juego with id = " + juegoId,
+                juego: updatedObject,
             });
         }
     } catch (error) {
         res.status(500).json({
-            message: "Error -> Can not update a Huesped with id = " + req.params.id,
+            message: "Error -> Cannot update a Juego with id = " + req.params.id,
             error: error.message
         });
     }
 }
 
+// Delete a game by id
 exports.deleteById = async (req, res) => {
     try {
-        let huespedId = req.params.id;
-        let huesped = await Huesped.findByPk(huespedId);
+        let juegoId = req.params.id;
+        let juego = await Juego.findByPk(juegoId);
 
-        if (!huesped) {
+        if (!juego) {
             res.status(404).json({
-                message: "Does Not exist a Huesped with id = " + huespedId,
+                message: "Does Not exist a Juego with id = " + juegoId,
                 error: "404",
             });
         } else {
-            await huesped.destroy();
+            await juego.destroy();
             res.status(200).json({
-                message: "Delete Successfully a Huesped with id = " + huespedId,
-                huesped: huesped,
+                message: "Delete Successfully a Juego with id = " + juegoId,
+                juego: juego,
             });
         }
     } catch (error) {
         res.status(500).json({
-            message: "Error -> Can NOT delete a Huesped with id = " + req.params.id,
+            message: "Error -> Cannot delete a Juego with id = " + req.params.id,
             error: error.message,
         });
     }
