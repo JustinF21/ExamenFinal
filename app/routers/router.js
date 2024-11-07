@@ -5,7 +5,6 @@ let router = express.Router();
  //constasntes de rutas 
 const customers = require('../controllers/controller.js');
 const huespedes = require('../controllers/huesped.js');
-
 const juegos = require('../controllers/juegos.controller.js');
 
 router.post('/api/customers/create', customers.create);
