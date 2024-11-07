@@ -5,7 +5,8 @@ let router = express.Router();
  //constasntes de rutas 
 const customers = require('../controllers/controller.js');
 const huespedes = require('../controllers/huesped.js');
-const juegos = require('../controllers/juego.js');
+
+const juegos = require('../controllers/juegos.controller.js');
 
 router.post('/api/customers/create', customers.create);
 router.get('/api/customers/all', customers.retrieveAllCustomers);
@@ -27,6 +28,9 @@ router.get('/api/juegos/all', juegos.retrieveAllJuegos);
 router.get('/api/juegos/onebyid/:id', juegos.getJuegoById);
 router.put('/api/juegos/update/:id', juegos.updateById);
 router.delete('/api/juegos/delete/:id', juegos.deleteById);
+
+
+
 
 
 
