@@ -29,13 +29,5 @@ router.put('/api/juegos/update/:id', juegos.updateById);
 router.delete('/api/juegos/delete/:id', juegos.deleteById);
 
 
-
-
-
-
-
-
-
-
 module.exports = router;
 
