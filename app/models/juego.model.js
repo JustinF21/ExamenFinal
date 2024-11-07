@@ -35,5 +35,5 @@ module.exports = (sequelize, Sequelize) => {
 
 	});
 	
-	return Huesped;
+	return Juego;
 }
