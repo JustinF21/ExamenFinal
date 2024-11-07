@@ -5,7 +5,7 @@ let router = express.Router();
  //constasntes de rutas 
 const customers = require('../controllers/controller.js');
 const huespedes = require('../controllers/huesped.js');
-const juegos = require('../controllers/juego.js');
+const juegos = require('../controllers/juego.controller.js');
 
 router.post('/api/customers/create', customers.create);
 router.get('/api/customers/all', customers.retrieveAllCustomers);
