@@ -11,8 +11,8 @@ exports.create = (req, res) => {
         juego.plataforma = req.body.plataforma;
         juego.fecha_lanzamiento = req.body.fecha_lanzamiento;
         juego.precio_alquiler = req.body.precio_alquiler;
-        juego.fecha_devolucion = req.body.fecha_devolucion; // Adjusted to match model field name
-        juego.nombre_cliente = req.body.nombre_cliente; // Adjusted to match model field name
+        juego.fecha_devolucion = req.body.fecha_devolucion; 
+        juego.nombre_cliente = req.body.nombre_cliente; 
         juego.comentario = req.body.comentario;
 
         Juego.create(juego).then(result => {
